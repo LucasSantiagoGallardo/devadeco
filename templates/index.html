@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFID UID Viewer</title>
+    <script>
+        async function fetchUID() {
+            try {
+                const response = await fetch("/uid");
+                const data = await response.json();
+                if (data.uid) {
+                    document.getElementById("uid").innerText = data.uid;
+                } else {
+                    document.getElementById("uid").innerText = "Error: " + data.error;
+                }
+            } catch (error) {
+                document.getElementById("uid").innerText = "Error: " + error.message;
+            }
+        }
+
+        async function controlGPIO(action) {
+            try {
+                const response = await fetch("/gpio", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action }),
+                });
+                const data = await response.json();
+                if (data.status) {
+                    document.getElementById("gpio-status").innerText = `GPIO14 está ${data.status}`;
+                } else {
+                    document.getElementById("gpio-status").innerText = `Error: ${data.error}`;
+                }
+            } catch (error) {
+                document.getElementById("gpio-status").innerText = `Error: ${error.message}`;
+            }
+        }
+
+        setInterval(fetchUID, 1000); // Actualizar UID cada segundo
+    </script>
+</head>
+<body>
+    <h1>RFID UID Viewer</h1>
+    <p>UID actual: <strong id="uid">Cargando...</strong></p>
+    <h2>Control GPIO</h2>
+    <p id="gpio-status">Estado desconocido</p>
+    <button onclick="controlGPIO('on')">Encender GPIO14</button>
+    <button onclick="controlGPIO('off')">Apagar GPIO14</button>
+</body>
+</html>
