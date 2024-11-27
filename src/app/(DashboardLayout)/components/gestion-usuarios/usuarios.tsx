@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, Grid, Modal, TextField, Typography, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useRouter } from 'next/router';
 
-const columnsBase: GridColDef[] = [
+const columns: GridColDef[] = [
   { field: 'Dni', headerName: 'DNI', width: 150 },
   { field: 'Name', headerName: 'Nombre', width: 150 },
   { field: 'Last_Name', headerName: 'Apellido', width: 150 },
@@ -15,7 +14,7 @@ const columnsBase: GridColDef[] = [
   {
     field: 'actions',
     headerName: 'Acciones',
-    width: 200,
+    width: 150,
     renderCell: (params) => (
       <Box display="flex" gap={1}>
         <Button
@@ -36,21 +35,6 @@ const columnsBase: GridColDef[] = [
       </Box>
     ),
   },
-  {
-    field: 'details',
-    headerName: 'Detalles',
-    width: 150,
-    renderCell: (params) => (
-      <Button
-        size="small"
-        variant="contained"
-        color="primary"
-        onClick={() => params.row.onViewDetails(params.row.Dni)}
-      >
-        Detalles
-      </Button>
-    ),
-  },
 ];
 
 const UserCRUD = () => {
@@ -62,7 +46,6 @@ const UserCRUD = () => {
   const [open, setOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState({});
   const [isEditing, setIsEditing] = useState(false);
-  const router = useRouter();
 
   const fetchRows = async () => {
     const response = await fetch('http://localhost/adeco/api/users.php');
@@ -71,7 +54,6 @@ const UserCRUD = () => {
       ...row,
       onEdit: handleEdit,
       onDelete: handleDelete,
-      onViewDetails: handleViewDetails,
     }));
     setRows(processedData);
     setFilteredRows(processedData);
@@ -101,10 +83,6 @@ const UserCRUD = () => {
       method: 'DELETE',
     });
     fetchRows();
-  };
-
-  const handleViewDetails = (dni) => {
-    router.push(`/detalles/${dni}`);
   };
 
   const handleSave = async () => {
@@ -142,7 +120,7 @@ const UserCRUD = () => {
   const toggleActiveFilter = () => {
     setShowActiveOnly(!showActiveOnly);
     if (!showActiveOnly) {
-      setFilteredRows(rows.filter((row) => row.Active.toLowerCase() === 'yes' || row.Active.toLowerCase() === 'true'));
+      setFilteredRows(rows.filter((row) => row.Active.toLowerCase() === 'yes' || row.Active.toLowerCase() === 'True' ));
     } else {
       setFilteredRows(rows);
     }
@@ -176,7 +154,7 @@ const UserCRUD = () => {
         </Button>
       </Box>
       <Box style={{ height: 400, width: '100%' }}>
-        <DataGrid rows={filteredRows} columns={columnsBase} pageSize={5} />
+        <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
       </Box>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box

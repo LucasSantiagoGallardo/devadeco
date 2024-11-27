@@ -25,13 +25,9 @@ const AccessHistory = () => {
     fetchData();
   }, []);
 
-  // Separar los datos por barrera y tipo de movimiento
-  const barrier1Data = accessData.filter(
-    (row) => row.ID_Access_Point === '1' || row.ID_Access_Point === '2'
-  );
-  const barrier2Data = accessData.filter(
-    (row) => row.ID_Access_Point === '3' || row.ID_Access_Point === '4'
-  );
+  // Filtrar por barrera
+  const barrier1Data = accessData.filter((row) => row.ID_Access_Point === '1');
+  const barrier2Data = accessData.filter((row) => row.ID_Access_Point === '2');
 
   // Configuración de columnas
   const columns: GridColDef[] = [
@@ -58,14 +54,14 @@ const AccessHistory = () => {
   ];
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" mb={3}>
+    <Box sx={{ p: 9 }}>
+      <Typography variant="h4" mb={9}>
         Historial de Accesos
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={12}>
         {/* Barrera 1 */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6" mb={2}>
+        <Grid item xs={12} md={12}>
+          <Typography variant="h9" mb={12}>
             Barrera 1
           </Typography>
           <Box style={{ height: 400, width: '100%' }}>
@@ -77,7 +73,8 @@ const AccessHistory = () => {
             />
           </Box>
         </Grid>
-
+        </Grid>
+        <Grid container spacing={3}>
         {/* Barrera 2 */}
         <Grid item xs={12} md={6}>
           <Typography variant="h6" mb={2}>
